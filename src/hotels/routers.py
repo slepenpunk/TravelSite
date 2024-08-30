@@ -1,33 +1,30 @@
 from typing import List
 
 from fastapi import APIRouter
+from sqlalchemy import select, insert
 
-from hotels.schemas import Room
+from database import async_session_maker
+from hotels.models import Room as RoomModel
+from hotels.schemas import Room as RoomSchema
 
 router = APIRouter(prefix="/hotels", tags=["Hotels"])
 
-test_db = [
-    {"id": 1, "name": "Standard", "price": 1000},
-    {"id": 2, "name": "Deluxe", "price": 5000, "privilege": [
-        {"has_spa": True, "has_mini_bar": True}
 
-    ]}
-]
-
-
-@router.get("/get-room/{room_id}", response_model=List[Room])
-async def get_room_by_id(room_id: int):
-    return [room for room in test_db if room.get("id") == room_id]
+@router.get("/get-rooms")
+async def get_rooms():
+    async with async_session_maker() as session:
+        query = select(RoomModel)
+        result = await session.execute(query)
+        return result.scalars().all()
 
 
 @router.post("/add-room")
-async def add_new_room(new_room: Room):
-    room = {
-        "id": new_room.id,
-        "name": new_room.name,
-        "price": new_room.price,
-        "privilege": new_room.privilege
-    }
-    test_db.append(room)
-    return (f"Room was add!"
-            f"{room}")
+async def add_room(new_room: RoomSchema):
+    async with async_session_maker() as session:
+        query = RoomModel(name=new_room.name,price=new_room.price,privelege=new_room.privilege)
+        session.add(query)
+        await session.commit()
+        session.refresh(query)
+        return query
+
+

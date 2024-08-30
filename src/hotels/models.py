@@ -16,5 +16,5 @@ class Room(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
+    price = Column(Integer)
     privileges = Column(JSON)
-    hotel_id = Column(Integer, ForeignKey("hotel.id"))
