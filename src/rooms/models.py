@@ -1,14 +1,12 @@
 from sqlalchemy import Column, Integer, String, JSON
-
 from database import Base
 
 
-class HotelModel(Base):
-    __tablename__ = "hotel"
+class RoomModel(Base):
+    __tablename__ = "room"
 
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
-    rate = Column(Integer)
-
+    price = Column(Integer)
 
 
