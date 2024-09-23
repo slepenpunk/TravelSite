@@ -12,6 +12,3 @@ class UserModel(Base):
     username = Column(String, nullable=False)
     email = Column(String, nullable=False)
     password = Column(String, nullable=False)
-    register_date = Column(TIMESTAMP, default=datetime.datetime.now(datetime.UTC).strftime('%Y-%m-%dT%H:%M:%M'))
-
-
