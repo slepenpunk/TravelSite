@@ -1,12 +1,12 @@
 import datetime
 
-from sqlalchemy import Column, Integer, String, TIMESTAMP
+from sqlalchemy import Column, Integer, String, TIMESTAMP, ForeignKey
 
 from database import Base
 
 
 class UserModel(Base):
-    __tablename__ = "user"
+    __tablename__ = "users"
 
     id = Column(Integer, primary_key=True)
     username = Column(String, nullable=False)

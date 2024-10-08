@@ -1,10 +1,7 @@
-import datetime
-
 from pydantic import BaseModel, EmailStr
 
 
 class UserSchema(BaseModel):
-    id: int | None = None
     username: str | None = "123"
     email: EmailStr
     password: str
@@ -14,5 +11,6 @@ class UserSchema(BaseModel):
         arbitrary_types_allowed = True
 
 
-class UserRegisterSchema(BaseModel):
+class UserAuth(BaseModel):
     email: EmailStr
+    password: str
