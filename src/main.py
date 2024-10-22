@@ -3,12 +3,14 @@ from fastapi import FastAPI
 from rooms.router import room_router
 from users.router import user_router
 from bookings.router import booking_router
+from hotels.router import hotel_router
 
 
 app = FastAPI()
 app.include_router(room_router)
 app.include_router(user_router)
 app.include_router(booking_router)
+app.include_router(hotel_router)
 
 
 if __name__ == "__main__":

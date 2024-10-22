@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Response, Depends
 
-from exceptions import Exceptions
+from .exceptions import *
 from users.auth import get_password_hash, auth_user, create_access_token
 from users.dependencies import get_current_user
 from users.models import UserModel
@@ -20,7 +20,7 @@ async def get_all_users():
 async def register_user(user: UserSchema):
     existing_user = await UserService.find_one_or_none(email=user.email)
     if existing_user:
-        raise Exceptions.UserAlreadyExist
+        raise UserAlreadyExist
     hashed_password = get_password_hash(user.password)
     await UserService.add(username=user.username,
                           email=user.email,
@@ -42,5 +42,8 @@ async def logout_user(response: Response):
 
 
 @user_router.get("/me")
-async def get_current_user(user: UserModel = Depends(get_current_user)):
+async def get_user(user: UserModel = Depends(get_current_user)):
     return user
+
+
+
