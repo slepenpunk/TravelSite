@@ -12,7 +12,7 @@ from users.models import UserModel
 booking_router = APIRouter(prefix="/bookings", tags=["Bookings"])
 
 
-@booking_router.get("/get")
+@booking_router.get("")
 async def get_bookings(user: UserModel = Depends(get_current_user)) -> list[BookingSchema]:
     return await BookingService.find_all(user_id=user.id)
 
@@ -26,9 +26,9 @@ async def create_booking(
         raise RoomCannotBeBooked
 
 
-@booking_router.delete("/delete")
-async def delete(booking_id: int):
-    get_booking = await BookingService.delete_by_id(booking_id)
-    if not get_booking:
+@booking_router.delete("/delete/{booking_id}")
+async def delete_booking(booking_id: int, user: UserModel = Depends(get_current_user)):
+    booking = await BookingService.delete(id=booking_id, user_id=user.id)
+    if not booking:
         raise BookingNotFound
-    return {"message": f"{get_booking.id} was deleted!"}
+    return {"message": f"Booking №{booking.id} of {user.username} was deleted!"}

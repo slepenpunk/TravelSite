@@ -37,20 +37,14 @@ class BaseService:
 
     # DELETE
     @classmethod
-    async def delete_by_id(cls, item_id):
+    async def delete(cls, **item_id):
         async with async_session_maker() as session:
-            exists_item = await cls.find_one_or_none(id=item_id)
+            exists_item = await cls.find_one_or_none(**item_id)
             if exists_item is None:
                 return None
-            stmt = delete(cls.model).filter_by(id=item_id)
+            stmt = delete(cls.model).filter_by(**item_id)
             await session.execute(stmt)
             await session.commit()
             return exists_item
 
     # UPDATE
-    @classmethod
-    async def update_by_id(cls, item_id):
-        async with async_session_maker() as session:
-            stmt = delete(cls.model).filter_by(id=item_id)
-            await session.execute(stmt)
-            await session.commit()

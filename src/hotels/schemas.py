@@ -5,3 +5,4 @@ class HotelSchema(BaseModel):
     id: int
     name: str
     rate: int
+    location: str

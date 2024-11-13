@@ -19,8 +19,8 @@ class BookingService(BaseService):
                   date_from: date,
                   date_to: date):
         async with async_session_maker() as session:
-            room_check = select(RoomModel).where(RoomModel.id == room_id)
-            room_exists = await session.execute(room_check)
+            query = select(RoomModel).where(RoomModel.id == room_id)
+            room_exists = await session.execute(query)
             room_exists = room_exists.scalar()
 
             if room_exists is None or room_exists.hotel_id is None:
