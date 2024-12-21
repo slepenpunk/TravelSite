@@ -1,6 +1,11 @@
-from fastapi import HTTPException, status
+from exceptions.base import BaseHHTPException
 
-HotelNotFound = HTTPException(
-    status_code=status.HTTP_404_NOT_FOUND,
-    detail="Hotel not found!"
-)
+
+class HotelNotFound(BaseHHTPException):
+    def __init__(self, detail: str = "Hotel not found!"):
+        super().__init__(status_code=404, detail=detail)
+
+
+class LocationNotFound(BaseHHTPException):
+    def __init__(self, detail: str = "Location not found!"):
+        super().__init__(detail=detail, status_code=404)

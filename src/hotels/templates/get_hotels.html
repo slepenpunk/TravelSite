@@ -1,0 +1,12 @@
+{% extends "/templates/base.html" %}
+
+{% block title %}All Hotels{% endblock %}
+
+{% block content %}
+<h2>All Hotels</h2>
+<ul>
+    {% for hotel in hotels %}
+        <li>{{ hotel.name }} - {{ hotel.location }}</li>
+    {% endfor %}
+</ul>
+{% endblock %}

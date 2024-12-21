@@ -1,5 +1,6 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 
+from hotels.exceptions import HotelNotFound
 from hotels.service import HotelService
 from rooms.service import RoomService
 
@@ -13,7 +14,10 @@ async def get_hotels():
 
 @hotel_router.get("/{location}")
 async def get_hotels_by_location(location: str):
-    return await HotelService.find_all(location=location)
+    hotels = await HotelService.find_all(location=location)
+    if not hotels:
+        raise HotelNotFound
+    return hotels
 
 
 @hotel_router.get("/{hotel_id}/rooms")

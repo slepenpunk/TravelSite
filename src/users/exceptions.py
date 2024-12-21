@@ -1,35 +1,42 @@
-from fastapi import HTTPException, status
+from exceptions.base import BaseHHTPException
+from fastapi import status
 
-UserAlreadyExist = HTTPException(
-    status_code=status.HTTP_409_CONFLICT,
-    detail="User already exist!"
-)
 
-UserNotFound = HTTPException(
-    status_code=status.HTTP_401_UNAUTHORIZED,
-    detail="User not found!"
-)
+class UserAlreadyExist(BaseHHTPException):
+    def __init__(self):
+        super().__init__(status_code=status.HTTP_409_CONFLICT, detail="User already exist!")
 
-IncorrectPassword = HTTPException(
-    status_code=status.HTTP_401_UNAUTHORIZED,
-    detail="Incorrect password!"
-)
 
-TokenExpired = HTTPException(
-    status_code=status.HTTP_401_UNAUTHORIZED,
-    detail="Token time is expire!"
-)
+class UserAlreadyLogged(BaseHHTPException):
+    def __init__(self):
+        super().__init__(status_code=status.HTTP_409_CONFLICT, detail="User already logged!")
 
-TokenNotFound = HTTPException(
-    status_code=status.HTTP_401_UNAUTHORIZED,
-    detail="Token not found!"
-)
 
-IncorrectTokenFormat = HTTPException(
-    status_code=status.HTTP_401_UNAUTHORIZED,
-    detail="Incorrect token format!"
-)
+class UserNotFound(BaseHHTPException):
+    def __init__(self):
+        super().__init__(status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found!")
 
-UserIsAbsent = HTTPException(
-    status_code=status.HTTP_401_UNAUTHORIZED
-)
+
+class IncorrectPassword(BaseHHTPException):
+    def __init__(self):
+        super().__init__(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect password!")
+
+
+class TokenExpired(BaseHHTPException):
+    def __init__(self):
+        super().__init__(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token time is expire!")
+
+
+class TokenNotFound(BaseHHTPException):
+    def __init__(self):
+        super().__init__(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token not found!")
+
+
+class IncorrectTokenFormat(BaseHHTPException):
+    def __init__(self):
+        super().__init__(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect token format!")
+
+
+class UserIsAbsent(BaseHHTPException):
+    def __init__(self, detail=None):
+        super().__init__(status_code=status.HTTP_401_UNAUTHORIZED, detail=detail)
