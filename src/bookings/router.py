@@ -29,7 +29,8 @@ async def create_booking(
     booking = await BookingService.add(user.id, room_id, date_from, date_to)
     if not booking:
         raise RoomCannotBeBooked
-    return BookingResponse(message="OK")
+    return BookingResponse(message="The room has been successfully booked!")
+
 
 
 @booking_router.delete("/delete/{booking_id}", response_model=BookingResponse)
