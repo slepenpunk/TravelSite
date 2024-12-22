@@ -2,6 +2,7 @@ from datetime import date
 
 from sqlalchemy import select, and_, or_, insert
 
+from bookings.exceptions import InvalidBookingDate
 from bookings.models import BookingModel
 from database import async_session_maker
 from rooms.exceptions import RoomNotFound
@@ -15,6 +16,8 @@ class BookingService(BaseService):
 
     @classmethod
     async def check_available_booking(cls, room_id, date_from, date_to):
+        if date_from > date_to:
+            raise InvalidBookingDate
         async with async_session_maker() as session:
             get_booking = select(BookingModel).where(
                 and_(
@@ -38,14 +41,11 @@ class BookingService(BaseService):
         return True
 
     @classmethod
-    async def add(cls,
-                  user_id: int,
-                  room_id: int,
-                  date_from: date,
-                  date_to: date):
+    async def add(cls, user_id: int, room_id: int, date_from: date, date_to: date):
         from rooms.service import RoomService
-        find_room = await RoomService.find_one_or_none(id=room_id)
-        if find_room is None or find_room.hotel_id is None:
+
+        get_room = await RoomService.find_one_or_none(id=room_id)
+        if get_room is None or get_room.hotel_id is None:
             raise RoomNotFound
 
         is_available = await cls.check_available_booking(room_id=room_id,

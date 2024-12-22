@@ -9,7 +9,8 @@ class HotelModel(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
     rate = Column(Integer, nullable=False)
-    location = Column(String)
+    city = Column(String)
+    address = Column(String)
 
 
 

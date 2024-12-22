@@ -3,7 +3,7 @@ from datetime import date
 from fastapi import APIRouter, Depends
 
 from bookings.exceptions import BookingNotFound
-from bookings.schemas import BookingSchema, CreateResponse, DeleteResponse
+from bookings.schemas import BookingSchema, BookingResponse
 from bookings.service import BookingService
 from rooms.exceptions import RoomCannotBeBooked
 from users.dependencies import get_current_user
@@ -20,7 +20,7 @@ async def get_bookings(user: UserModel = Depends(get_current_user)):
     return bookings
 
 
-@booking_router.post("/create", response_model=CreateResponse)
+@booking_router.post("/create", response_model=BookingResponse)
 async def create_booking(
         room_id: int,
         date_from: date,
@@ -29,12 +29,12 @@ async def create_booking(
     booking = await BookingService.add(user.id, room_id, date_from, date_to)
     if not booking:
         raise RoomCannotBeBooked
-    return CreateResponse(message="OK")
+    return BookingResponse(message="OK")
 
 
-@booking_router.delete("/delete/{booking_id}", response_model=DeleteResponse)
+@booking_router.delete("/delete/{booking_id}", response_model=BookingResponse)
 async def delete_booking(booking_id: int, user: UserModel = Depends(get_current_user)):
     booking = await BookingService.delete(id=booking_id, user_id=user.id)
     if not booking:
         raise BookingNotFound
-    return DeleteResponse(message=f"Booking №{booking.id} of {user.username} was deleted!")
+    return BookingResponse(message=f"Booking №{booking.id} of {user.username} was deleted!")

@@ -22,10 +22,3 @@ class UserAuth(BaseModel):
 class UserResponse(BaseModel):
     message: str
 
-
-class LoginResponse(UserResponse):
-    pass
-
-
-class RegisterResponse(UserResponse):
-    pass
