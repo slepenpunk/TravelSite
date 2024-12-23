@@ -1,6 +1,8 @@
+import asyncio
 from datetime import date
 
 from fastapi import APIRouter, Depends
+from fastapi_cache.decorator import cache
 
 from bookings.exceptions import BookingNotFound
 from bookings.schemas import BookingSchema, BookingResponse
@@ -13,6 +15,7 @@ booking_router = APIRouter(prefix="/bookings", tags=["Bookings"])
 
 
 @booking_router.get("", response_model=list[BookingSchema])
+@cache(expire=30)
 async def get_bookings(user: UserModel = Depends(get_current_user)):
     bookings = await BookingService.find_all(user_id=user.id)
     if not bookings:
@@ -21,6 +24,7 @@ async def get_bookings(user: UserModel = Depends(get_current_user)):
 
 
 @booking_router.post("/create", response_model=BookingResponse)
+@cache(expire=30)
 async def create_booking(
         room_id: int,
         date_from: date,
@@ -30,7 +34,6 @@ async def create_booking(
     if not booking:
         raise RoomCannotBeBooked
     return BookingResponse(message="The room has been successfully booked!")
-
 
 
 @booking_router.delete("/delete/{booking_id}", response_model=BookingResponse)

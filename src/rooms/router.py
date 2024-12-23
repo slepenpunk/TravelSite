@@ -1,8 +1,9 @@
+import asyncio
 from typing import List, Any
 
 from fastapi import APIRouter
+from fastapi_cache.decorator import cache
 
-from hotels.exceptions import HotelNotFound
 from hotels.service import HotelService
 from rooms.exceptions import RoomNotFound
 from rooms.schemas import RoomSchema, RoomResponse
@@ -11,12 +12,11 @@ from rooms.service import RoomService
 room_router = APIRouter(prefix="/rooms", tags=["Rooms"])
 
 
-async def get_rooms_with_hotel_info(rooms):
+async def get_rooms_with_hotel_info(rooms) -> list[RoomSchema]:
     rooms_with_info = []
 
     for room in rooms:
         hotel = await HotelService.find_one_or_none(id=room.hotel_id)
-
         rooms_with_info.append(
             RoomSchema(
                 name=room.name,
@@ -30,6 +30,7 @@ async def get_rooms_with_hotel_info(rooms):
 
 
 @room_router.get("", response_model=list[RoomSchema])
+@cache(expire=30)
 async def get_all_rooms():
     get_rooms = await RoomService.find_all()
     if not get_rooms:
@@ -40,6 +41,7 @@ async def get_all_rooms():
 
 
 @room_router.get("/price/{price}", response_model=list[RoomSchema])
+@cache(expire=30)
 async def get_rooms_by_price(max_price: int, min_price: int = 0):
     get_rooms = await RoomService.find_by_price(max_price, min_price)
     if not get_rooms:

@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+from fastapi_cache.decorator import cache
 
 from hotels.exceptions import HotelNotFound
 from hotels.schemas import HotelSchema, HotelResponse
@@ -11,6 +12,7 @@ hotel_router = APIRouter(prefix="/hotels", tags=["Hotels"])
 
 
 @hotel_router.get("", response_model=list[HotelSchema])
+@cache(expire=30)
 async def get_hotels():
     hotels = await HotelService.find_all()
     if not hotels:
@@ -19,16 +21,17 @@ async def get_hotels():
 
 
 @hotel_router.get("/{location}", response_model=list[HotelSchema])
+@cache(expire=30)
 async def get_hotels_by_city(city: str):
     hotels = await HotelService.find_all(city=city)
     if not hotels:
         raise HotelNotFound
 
-
     return hotels
 
 
 @hotel_router.get("/{hotel_id}/rooms", response_model=list[RoomSchema])
+@cache(expire=30)
 async def get_rooms_of_hotel(hotel_id: int):
     get_rooms = await RoomService.find_all(hotel_id=hotel_id)
     if not get_rooms:
