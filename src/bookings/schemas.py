@@ -4,7 +4,6 @@ from pydantic import BaseModel
 
 
 class BookingSchema(BaseModel):
-    id: int
     user_id: int
     room_id: int
     date_from: datetime
@@ -16,6 +15,7 @@ class BookingSchema(BaseModel):
     class Config:
         from_attributes = True
         arbitrary_types_allowed = True
+
 
 
 class BookingResponse(BaseModel):

@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, JSON
+from sqlalchemy.orm import relationship
 
 from database import Base
 
@@ -12,5 +13,8 @@ class HotelModel(Base):
     city = Column(String)
     address = Column(String)
 
+    room = relationship("RoomModel", back_populates="hotel")
 
+    def __str__(self):
+        return f"{self.name}"
 

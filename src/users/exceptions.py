@@ -40,3 +40,8 @@ class IncorrectTokenFormat(BaseHHTPException):
 class UserIsAbsent(BaseHHTPException):
     def __init__(self, detail=None):
         super().__init__(status_code=status.HTTP_401_UNAUTHORIZED, detail=detail)
+
+
+class AccessDenied(BaseHHTPException):
+    def __init__(self):
+        super().__init__(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied!")

@@ -1,13 +1,17 @@
 import asyncio
+import json
 from datetime import date
 
+import pydantic
 from fastapi import APIRouter, Depends
 from fastapi_cache.decorator import cache
+from pydantic import parse_obj_as, TypeAdapter
 
 from bookings.exceptions import BookingNotFound
 from bookings.schemas import BookingSchema, BookingResponse
 from bookings.service import BookingService
 from rooms.exceptions import RoomCannotBeBooked
+from tasks.tasks import send_booking_confirmation
 from users.dependencies import get_current_user
 from users.models import UserModel
 
@@ -33,6 +37,12 @@ async def create_booking(
     booking = await BookingService.add(user.id, room_id, date_from, date_to)
     if not booking:
         raise RoomCannotBeBooked
+
+    adapter = TypeAdapter(BookingSchema)
+    booking_dict = adapter.dump_json(booking)
+    booking_dict = json.loads(booking_dict.decode("utf-8"))
+    send_booking_confirmation.delay(booking_dict, user.email)
+
     return BookingResponse(message="The room has been successfully booked!")
 
 

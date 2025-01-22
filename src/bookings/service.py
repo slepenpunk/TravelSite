@@ -66,4 +66,4 @@ class BookingService(BaseService):
                 ).returning(BookingModel)
                 new_booking = await session.execute(add_booking)
                 await session.commit()
-                return new_booking
+                return new_booking.scalar()

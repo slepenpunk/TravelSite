@@ -10,3 +10,12 @@ DB_USER = os.environ.get("DB_USER")
 DB_PASS = os.environ.get("DB_PASS")
 
 SECRET_KEY = os.environ.get("SECRET_KEY")
+
+REDIS_URL = os.environ.get("REDIS_URL")
+
+SMTP_EMAIL = os.environ.get("SMTP_EMAIL")
+SMTP_PASS = os.environ.get("SMTP_PASS")
+SMTP_PORT = os.environ.get("SMTP_PORT")
+SMTP_HOST = os.environ.get("SMTP_HOST")
+
+ADMIN_EMAILS = os.environ.get("ADMIN_EMAILS")
