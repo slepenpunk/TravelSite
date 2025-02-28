@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class RoomSchema(BaseModel):
@@ -7,9 +7,10 @@ class RoomSchema(BaseModel):
     hotel_name: str
     hotel_city: str
 
-    class Config:
-        from_attributes = True
-        arbitrary_types_allowed = True
+    model_config = ConfigDict(
+        from_attributes=True,
+        arbitrary_types_allowed=True
+    )
 
 
 class RoomResponse(BaseModel):

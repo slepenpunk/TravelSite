@@ -1,0 +1,14 @@
+[
+  {
+    "name": "Seaside Resort",
+    "rate": 4,
+    "city": "Сочи",
+    "address": "ул. Ленина, 50"
+  },
+  {
+    "name": "Mountain View",
+    "rate": 3,
+    "city": "Кисловодск",
+    "address": "площадь Горького, 10"
+  }
+]

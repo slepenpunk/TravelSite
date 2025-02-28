@@ -45,3 +45,8 @@ class UserIsAbsent(BaseHHTPException):
 class AccessDenied(BaseHHTPException):
     def __init__(self):
         super().__init__(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied!")
+
+
+class IncorrectEmailFormat(BaseHHTPException):
+    def __init__(self):
+        super().__init__(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect e-mail format!")

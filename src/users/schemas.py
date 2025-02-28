@@ -1,13 +1,14 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, ConfigDict
 
 
 class UserSchema(BaseModel):
     username: str
     email: EmailStr
 
-    class Config:
-        from_attributes = True
-        arbitrary_types_allowed = True
+    model_config = ConfigDict(
+        from_attributes=True,
+        arbitrary_types_allowed=True
+    )
 
 
 class UserIn(UserSchema):

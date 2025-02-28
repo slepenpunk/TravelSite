@@ -1,9 +1,5 @@
-from urllib import response
-
-from sqladmin import Admin
 from sqladmin.authentication import AuthenticationBackend
 from starlette.requests import Request
-from starlette.responses import RedirectResponse
 
 from config import ADMIN_EMAILS
 from users.auth import auth_user, create_access_token

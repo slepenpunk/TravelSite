@@ -10,6 +10,7 @@ from users.service import UserService
 from users.schemas import UserSchema, UserAuth, UserIn, UserResponse
 
 user_router = APIRouter(prefix="/users", tags=["Users"])
+auth_router = APIRouter(prefix="/auth", tags=["Auth"])
 
 
 @user_router.get("/get-users", response_model=list[UserSchema])
@@ -20,19 +21,20 @@ async def get_all_users():
     return query
 
 
-@user_router.post("/register", response_model=UserResponse)
+@auth_router.post("/register", response_model=UserResponse)
 async def register_user(user: UserIn):
     existing_user = await UserService.find_one_or_none(email=user.email)
     if existing_user:
         raise UserAlreadyExist
     hashed_password = get_password_hash(user.password)
+    print("register_user", hashed_password)
     await UserService.add(username=user.username,
                           email=user.email,
                           password=hashed_password)
     return UserResponse(message=f"{user.username} successful registered!")
 
 
-@user_router.post("/login", response_model=UserResponse)
+@auth_router.post("/login", response_model=UserResponse)
 async def login_user(response: Response, user_data: UserAuth):
     user = await auth_user(user_data.email, user_data.password)
     access_token = create_access_token({"sub": str(user.id)})
@@ -40,7 +42,7 @@ async def login_user(response: Response, user_data: UserAuth):
     return UserResponse(message=f'{user.id} {user.username} logged in!')
 
 
-@user_router.post("/logout", response_model=UserResponse)
+@auth_router.post("/logout", response_model=UserResponse)
 async def logout_user(response: Response, user: UserModel = Depends(get_current_user)):
     response.delete_cookie("booking_access_token")
     return UserResponse(message=f"{user.id} {user.username} logout.")

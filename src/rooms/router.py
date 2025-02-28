@@ -1,6 +1,3 @@
-import asyncio
-from typing import List, Any
-
 from fastapi import APIRouter
 from fastapi_cache.decorator import cache
 
@@ -17,6 +14,7 @@ async def get_rooms_with_hotel_info(rooms) -> list[RoomSchema]:
 
     for room in rooms:
         hotel = await HotelService.find_one_or_none(id=room.hotel_id)
+
         rooms_with_info.append(
             RoomSchema(
                 name=room.name,

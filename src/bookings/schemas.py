@@ -1,6 +1,6 @@
 import datetime
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class BookingSchema(BaseModel):
@@ -12,12 +12,11 @@ class BookingSchema(BaseModel):
     total_cost: int
     total_days: int
 
-    class Config:
-        from_attributes = True
-        arbitrary_types_allowed = True
-
+    model_config = ConfigDict(
+        from_attributes=True,
+        arbitrary_types_allowed=True
+    )
 
 
 class BookingResponse(BaseModel):
     message: str
-

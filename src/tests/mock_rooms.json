@@ -1,0 +1,22 @@
+[
+  {
+    "name": "Economy Room",
+    "price": 1000,
+    "hotel_id": 1
+  },
+  {
+    "name": "Luxury Suite",
+    "price": 5000,
+    "hotel_id": 1
+  },
+  {
+    "name": "Junior Suite",
+    "price": 2500,
+    "hotel_id": 2
+  },
+  {
+    "name": "Single Room",
+    "price": 3000,
+    "hotel_id": 2
+  }
+]
