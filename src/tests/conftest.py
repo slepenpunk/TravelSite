@@ -1,8 +1,11 @@
-import asyncio
 import datetime
 import json
 
 import pytest
+from fakeredis import aioredis
+from fastapi_cache import FastAPICache
+from fastapi_cache.backends.inmemory import InMemoryBackend
+from fastapi_cache.backends.redis import RedisBackend
 from sqlalchemy import insert
 
 from database import Base, async_session_maker, engine
@@ -10,6 +13,7 @@ from config import MODE
 from bookings.models import BookingModel
 from main import app
 from rooms.models import RoomModel
+from users.auth import get_password_hash
 from users.models import UserModel
 from hotels.models import HotelModel
 from httpx import AsyncClient, ASGITransport
@@ -32,6 +36,9 @@ async def prepare_database():
     users = open_mock_json("users")
     bookings = open_mock_json("bookings")
 
+    for user in users:
+        user["password"] = get_password_hash(user["password"])
+
     for booking in bookings:
         booking["date_from"] = datetime.datetime.strptime(booking["date_from"], "%Y-%m-%d")
         booking["date_to"] = datetime.datetime.strptime(booking["date_to"], "%Y-%m-%d")
@@ -50,11 +57,10 @@ async def prepare_database():
         await session.commit()
 
 
-# @pytest.fixture(scope="session")
-# def event_loop(request):
-#     loop = asyncio.get_event_loop_policy().new_event_loop()
-#     yield loop
-#     loop.close()
+@pytest.fixture(scope="session", autouse=True)
+async def init_cache():
+    redis = aioredis.FakeRedis()
+    FastAPICache.init(RedisBackend(redis), prefix="cache")
 
 
 @pytest.fixture(scope="function")

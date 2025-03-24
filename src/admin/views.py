@@ -1,4 +1,5 @@
 from email_validator import validate_email, EmailNotValidError
+from pydantic import ValidationError
 
 from sqladmin import ModelView
 
@@ -6,7 +7,7 @@ from bookings.models import BookingModel
 from hotels.models import HotelModel
 from rooms.models import RoomModel
 from users.auth import get_password_hash
-from users.exceptions import IncorrectEmailFormat
+from users.exceptions import IncorrectEmailFormat, UserAlreadyExist
 from users.models import UserModel
 from users.router import register_user
 from users.schemas import UserSchema, UserIn
@@ -29,7 +30,35 @@ class UserAdmin(ModelView, model=UserModel):
     can_delete = True
 
     async def on_model_change(self, data, model, is_created, request):
-        data["password"] = get_password_hash(data["password"])
+        try:
+            new_email = data.get("email")
+            new_username = data.get("username")
+            new_password = data.get("password")
+
+            user_schema = UserIn(email=new_email,
+                                 username=new_username,
+                                 password=new_password
+                                 )
+
+            if user_schema.email:
+                existing_user = await UserService.find_one_or_none(email=user_schema.email)
+                if existing_user and (is_created or existing_user.id != model.id):
+                    raise UserAlreadyExist
+
+            if new_password:
+                data["password"] = get_password_hash(user_schema.password)
+        except ValidationError as e:
+            errors = e.errors()
+            error_messages = []
+
+            for error in errors:
+                field = error["loc"][0]  # Получаем имя поля, где произошла ошибка
+                msg = error["msg"]  # Получаем сообщение об ошибке
+                error_messages.append(f"{field}: {msg}")
+
+            formatted_errors = "; ".join(error_messages)
+            raise ValueError(formatted_errors)
+
 
 
 class BookingAdmin(ModelView, model=BookingModel):

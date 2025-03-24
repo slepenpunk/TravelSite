@@ -20,7 +20,7 @@ async def get_hotels():
     return hotels
 
 
-@hotel_router.get("/{location}", response_model=list[HotelSchema])
+@hotel_router.get("/{city}", response_model=list[HotelSchema])
 @cache(expire=30)
 async def get_hotels_by_city(city: str):
     hotels = await HotelService.find_all(city=city)
@@ -30,15 +30,15 @@ async def get_hotels_by_city(city: str):
     return hotels
 
 
-@hotel_router.get("/{hotel_id}/rooms", response_model=list[RoomSchema])
+@hotel_router.get("/{name}/rooms", response_model=list[RoomSchema])
 @cache(expire=30)
-async def get_rooms_of_hotel(hotel_id: int):
-    get_rooms = await RoomService.find_all(hotel_id=hotel_id)
-    if not get_rooms:
-        raise RoomNotFound
-
-    hotel = await HotelService.find_one_or_none(id=hotel_id)
-    if not hotel:
+async def get_rooms_of_hotel(name: str):
+    hotel = await HotelService.find_one_or_none(name=name)
+    if hotel:
+        get_rooms = await RoomService.find_all(hotel_id=hotel.id)
+        if not get_rooms:
+            raise RoomNotFound
+    else:
         raise HotelNotFound
 
     rooms = [
@@ -47,7 +47,8 @@ async def get_rooms_of_hotel(hotel_id: int):
             price=room.price,
             hotel_name=hotel.name,
             hotel_city=hotel.city
-        ) for room in get_rooms]
+        ) for room in get_rooms
+    ]
 
     return rooms
 

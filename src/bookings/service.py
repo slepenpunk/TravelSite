@@ -1,4 +1,5 @@
-from datetime import date
+import time
+from datetime import date, datetime, timezone
 
 from sqlalchemy import select, and_, or_, insert
 
@@ -9,15 +10,20 @@ from rooms.exceptions import RoomNotFound
 from rooms.models import RoomModel
 
 from services.base import BaseService
+from users.exceptions import UserNotFound
+from users.service import UserService
 
 
 class BookingService(BaseService):
     model = BookingModel
 
     @classmethod
-    async def check_available_booking(cls, room_id, date_from, date_to):
-        if date_from > date_to:
+    async def check_available_booking(cls, room_id, date_from: date, date_to: date):
+        utc_now = datetime.now(timezone.utc).date()
+
+        if date_from >= date_to or date_from < utc_now:
             raise InvalidBookingDate
+
         async with async_session_maker() as session:
             get_booking = select(BookingModel).where(
                 and_(
@@ -34,7 +40,7 @@ class BookingService(BaseService):
                     )
                 )
             )
-        get_booking = await session.execute(get_booking)
+            get_booking = await session.execute(get_booking)
 
         if get_booking.scalars().first():
             return None
@@ -52,18 +58,22 @@ class BookingService(BaseService):
                                                          date_from=date_from,
                                                          date_to=date_to)
 
+        get_user = await UserService.find_by_id(user_id)
+        if not get_user:
+            raise UserNotFound
+
         if is_available is True:
             async with async_session_maker() as session:
                 get_price = select(RoomModel.price).filter_by(id=room_id)
                 price = await session.execute(get_price)
                 price: int = price.scalar()
-                add_booking = insert(BookingModel).values(
+                add_booking = insert(cls.model).values(
                     user_id=user_id,
                     room_id=room_id,
                     date_from=date_from,
                     date_to=date_to,
                     price=price
-                ).returning(BookingModel)
+                ).returning(cls.model)
                 new_booking = await session.execute(add_booking)
                 await session.commit()
                 return new_booking.scalar()

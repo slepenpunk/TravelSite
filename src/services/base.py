@@ -31,9 +31,10 @@ class BaseService:
     @classmethod
     async def add(cls, **data):
         async with async_session_maker() as session:
-            stmt = insert(cls.model).values(**data)
-            await session.execute(stmt)
+            stmt = insert(cls.model).values(**data).returning(cls.model)
+            result = await session.execute(stmt)
             await session.commit()
+            return result.scalar_one_or_none()
 
     # DELETE
     @classmethod

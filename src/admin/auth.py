@@ -4,7 +4,7 @@ from starlette.requests import Request
 from config import ADMIN_EMAILS
 from users.auth import auth_user, create_access_token
 from users.dependencies import get_current_user
-from users.exceptions import AccessDenied
+from users.exceptions import AccessDenied, UserAlreadyExist
 
 
 class AdminAuth(AuthenticationBackend):
@@ -12,6 +12,7 @@ class AdminAuth(AuthenticationBackend):
         form = await request.form()
         email, password = form["username"], form["password"]
         user = await auth_user(email, password)
+
         if user and email not in ADMIN_EMAILS:
             raise AccessDenied
         if user:

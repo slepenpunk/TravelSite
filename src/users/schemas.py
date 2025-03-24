@@ -1,8 +1,8 @@
-from pydantic import BaseModel, EmailStr, ConfigDict
+from pydantic import BaseModel, EmailStr, ConfigDict, Field, ValidationError
 
 
 class UserSchema(BaseModel):
-    username: str
+    username: str = Field(min_length=2, max_length=32)
     email: EmailStr
 
     model_config = ConfigDict(
@@ -12,7 +12,10 @@ class UserSchema(BaseModel):
 
 
 class UserIn(UserSchema):
-    password: str
+    try:
+        password: str = Field(min_length=8, max_length=32)
+    except ValueError as e:
+        raise ValidationError(str(e))
 
 
 class UserAuth(BaseModel):

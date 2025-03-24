@@ -1,11 +1,9 @@
-import asyncio
 import json
 from datetime import date
 
-import pydantic
 from fastapi import APIRouter, Depends
 from fastapi_cache.decorator import cache
-from pydantic import parse_obj_as, TypeAdapter
+from pydantic import TypeAdapter
 
 from bookings.exceptions import BookingNotFound
 from bookings.schemas import BookingSchema, BookingResponse

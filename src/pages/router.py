@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request, HTTPException, Query
+from fastapi import APIRouter, Request, HTTPException
 from fastapi.templating import Jinja2Templates
 
 from hotels.exceptions import CityNotFound

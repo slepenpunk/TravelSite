@@ -1,7 +1,4 @@
 from fastapi import APIRouter, Response, Depends
-from starlette.responses import JSONResponse
-
-from bookings.schemas import BookingResponse
 from .exceptions import *
 from users.auth import get_password_hash, auth_user, create_access_token
 from users.dependencies import get_current_user
@@ -27,7 +24,6 @@ async def register_user(user: UserIn):
     if existing_user:
         raise UserAlreadyExist
     hashed_password = get_password_hash(user.password)
-    print("register_user", hashed_password)
     await UserService.add(username=user.username,
                           email=user.email,
                           password=hashed_password)

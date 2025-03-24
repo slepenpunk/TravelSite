@@ -19,7 +19,7 @@ class UserNotFound(BaseHHTPException):
 
 class IncorrectPassword(BaseHHTPException):
     def __init__(self):
-        super().__init__(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect password!")
+        super().__init__(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Incorrect password!")
 
 
 class TokenExpired(BaseHHTPException):
@@ -49,4 +49,4 @@ class AccessDenied(BaseHHTPException):
 
 class IncorrectEmailFormat(BaseHHTPException):
     def __init__(self):
-        super().__init__(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect e-mail format!")
+        super().__init__(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Incorrect e-mail format!")
