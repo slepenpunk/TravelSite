@@ -4,18 +4,18 @@ from users.auth import get_password_hash, auth_user, create_access_token
 from users.dependencies import get_current_user
 from users.models import UserModel
 from users.service import UserService
-from users.schemas import UserSchema, UserAuth, UserIn, UserResponse
+from users.schemas import UserSchema, UserAuth, UserIn, UserResponse, UserOut
 
 user_router = APIRouter(prefix="/users", tags=["Users"])
 auth_router = APIRouter(prefix="/auth", tags=["Auth"])
 
 
-@user_router.get("/get-users", response_model=list[UserSchema])
-async def get_all_users():
-    query = await UserService.find_all()
-    if not query:
-        raise UserNotFound
-    return query
+# @user_router.get("/get-users", response_model=list[UserSchema])
+# async def get_all_users():
+#     query = await UserService.find_all()
+#     if not query:
+#         raise UserNotFound
+#     return query
 
 
 @auth_router.post("/register", response_model=UserResponse)
@@ -38,12 +38,12 @@ async def login_user(response: Response, user_data: UserAuth):
     return UserResponse(message=f'{user.id} {user.username} logged in!')
 
 
-@auth_router.post("/logout", response_model=UserResponse)
+@user_router.post("/logout", response_model=UserResponse)
 async def logout_user(response: Response, user: UserModel = Depends(get_current_user)):
     response.delete_cookie("booking_access_token")
     return UserResponse(message=f"{user.id} {user.username} logout.")
 
 
-@user_router.get("/me", response_model=UserSchema)
+@user_router.get("/me", response_model=UserOut)
 async def get_me(user: UserModel = Depends(get_current_user)):
     return user

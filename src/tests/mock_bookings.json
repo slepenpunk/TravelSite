@@ -2,15 +2,15 @@
   {
     "user_id": 1,
     "room_id": 1,
-    "date_from": "2025-03-25",
-    "date_to": "2025-03-30",
+    "date_from": "2025-05-25",
+    "date_to": "2025-05-30",
     "price": 1000
   },
   {
     "user_id": 2,
     "room_id": 3,
-    "date_from": "2025-04-02",
-    "date_to": "2025-04-08",
+    "date_from": "2025-05-02",
+    "date_to": "2025-05-08",
     "price": 2500
   }
 ]

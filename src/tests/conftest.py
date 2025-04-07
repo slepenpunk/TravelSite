@@ -4,7 +4,6 @@ import json
 import pytest
 from fakeredis import aioredis
 from fastapi_cache import FastAPICache
-from fastapi_cache.backends.inmemory import InMemoryBackend
 from fastapi_cache.backends.redis import RedisBackend
 from sqlalchemy import insert
 
@@ -17,6 +16,8 @@ from users.auth import get_password_hash
 from users.models import UserModel
 from hotels.models import HotelModel
 from httpx import AsyncClient, ASGITransport
+
+from config import EMAIL_USER_FOR_TESTS, PASSWORD_USER_FOR_TESTS
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -66,6 +67,18 @@ async def init_cache():
 @pytest.fixture(scope="function")
 async def ac():
     async with AsyncClient(base_url="http://test", transport=ASGITransport(app=app)) as ac:
+        yield ac
+
+
+@pytest.fixture(scope="session")
+async def auth_ac():
+    async with AsyncClient(base_url="http://test", transport=ASGITransport(app=app)) as ac:
+        response = await ac.post("/auth/login", json={
+            "email": EMAIL_USER_FOR_TESTS,
+            "password": PASSWORD_USER_FOR_TESTS
+        })
+        cookie = response.cookies["booking_access_token"]
+        assert cookie
         yield ac
 
 

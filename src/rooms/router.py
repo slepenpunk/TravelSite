@@ -38,7 +38,7 @@ async def get_all_rooms():
     return rooms
 
 
-@room_router.get("/price/{price}", response_model=list[RoomSchema])
+@room_router.get("/price", response_model=list[RoomSchema])
 @cache(expire=30)
 async def get_rooms_by_price(max_price: int, min_price: int = 0):
     get_rooms = await RoomService.find_by_price(max_price, min_price)
@@ -49,7 +49,7 @@ async def get_rooms_by_price(max_price: int, min_price: int = 0):
     return rooms
 
 
-@room_router.delete("/delete/{room_id}", response_model=RoomResponse)
-async def delete(room_id: int):
-    room = await RoomService.delete(room_id=room_id)
-    return RoomResponse(message=f"{room.name} was deleted!")
+# @room_router.delete("/delete/{room_id}", response_model=RoomResponse)
+# async def delete(room_id: int):
+#     room = await RoomService.delete(room_id=room_id)
+#     return RoomResponse(message=f"{room.name} was deleted!")

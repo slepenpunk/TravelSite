@@ -53,7 +53,7 @@ async def get_rooms_of_hotel(name: str):
     return rooms
 
 
-@hotel_router.delete("/delete/{hotel_id}", response_model=HotelResponse)
-async def delete(hotel_id: int):
-    hotel = await HotelService.delete(hotel_id)
-    return HotelResponse(message=f"{hotel.name} was deleted!")
+# @hotel_router.delete("/delete/{hotel_id}", response_model=HotelResponse)
+# async def delete(hotel_id: int):
+#     hotel = await HotelService.delete(hotel_id)
+#     return HotelResponse(message=f"{hotel.name} was deleted!")

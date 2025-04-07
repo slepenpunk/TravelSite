@@ -28,3 +28,6 @@ SMTP_PORT = os.environ.get("SMTP_PORT")
 SMTP_HOST = os.environ.get("SMTP_HOST")
 
 ADMIN_EMAILS = os.environ.get("ADMIN_EMAILS")
+
+EMAIL_USER_FOR_TESTS = os.environ.get("EMAIL_USER_FOR_TESTS")
+PASSWORD_USER_FOR_TESTS = os.environ.get("PASSWORD_USER_FOR_TESTS")

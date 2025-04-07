@@ -14,7 +14,7 @@ class UserAlreadyLogged(BaseHHTPException):
 
 class UserNotFound(BaseHHTPException):
     def __init__(self):
-        super().__init__(status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found!")
+        super().__init__(status_code=status.HTTP_404_NOT_FOUND, detail="User not found!")
 
 
 class IncorrectPassword(BaseHHTPException):
@@ -50,3 +50,15 @@ class AccessDenied(BaseHHTPException):
 class IncorrectEmailFormat(BaseHHTPException):
     def __init__(self):
         super().__init__(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Incorrect e-mail format!")
+
+
+class IncorrectUsernameFormat(BaseHHTPException):
+    def __init__(self):
+        super().__init__(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                         detail="Username length must be between 2 and 32 characters!")
+
+
+class IncorrectPasswordFormat(BaseHHTPException):
+    def __init__(self):
+        super().__init__(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                         detail="Password length must be between 8 and 32 characters!")

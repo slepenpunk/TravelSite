@@ -1,4 +1,4 @@
-from sqlalchemy import select, insert, delete
+from sqlalchemy import select, insert, delete, update
 from database import async_session_maker
 
 
@@ -49,3 +49,16 @@ class BaseService:
             return exists_item
 
     # UPDATE
+    @classmethod
+    async def update(cls, item_id, **data):
+        async with async_session_maker() as session:
+            exists_item = await cls.find_one_or_none(id=item_id)
+            if exists_item is None:
+                return None
+            stmt = update(cls.model
+                          ).where(cls.model.id == item_id
+                                  ).values(**data
+                                           ).returning(cls.model)
+            result = await session.execute(stmt)
+            await session.commit()
+            return result.scalar_one_or_none()

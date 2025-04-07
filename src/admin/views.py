@@ -7,7 +7,7 @@ from bookings.models import BookingModel
 from hotels.models import HotelModel
 from rooms.models import RoomModel
 from users.auth import get_password_hash
-from users.exceptions import IncorrectEmailFormat, UserAlreadyExist
+from users.exceptions import UserAlreadyExist
 from users.models import UserModel
 from users.router import register_user
 from users.schemas import UserSchema, UserIn
@@ -52,13 +52,12 @@ class UserAdmin(ModelView, model=UserModel):
             error_messages = []
 
             for error in errors:
-                field = error["loc"][0]  # Получаем имя поля, где произошла ошибка
-                msg = error["msg"]  # Получаем сообщение об ошибке
+                field = error["loc"][0]
+                msg = error["msg"]
                 error_messages.append(f"{field}: {msg}")
 
             formatted_errors = "; ".join(error_messages)
             raise ValueError(formatted_errors)
-
 
 
 class BookingAdmin(ModelView, model=BookingModel):

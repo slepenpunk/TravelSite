@@ -4,7 +4,7 @@ from starlette.requests import Request
 from config import ADMIN_EMAILS
 from users.auth import auth_user, create_access_token
 from users.dependencies import get_current_user
-from users.exceptions import AccessDenied, UserAlreadyExist
+from users.exceptions import AccessDenied
 
 
 class AdminAuth(AuthenticationBackend):
