@@ -1,0 +1,73 @@
+services:
+  app:
+    build:
+      context: .
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env-non-dev
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  db:
+    container_name: app_db
+    image: postgres
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 1s
+      timeout: 3s
+      retries: 30
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "5050:80"
+
+  celery:
+    build:
+      context: .
+    command: ["./docker/celery.sh", "celery"]
+    env_file:
+      - .env-non-dev
+    volumes:
+      - .:/main_app
+    depends_on:
+      - redis
+    entrypoint: [ ]
+
+  flower:
+    build:
+      context: .
+    command: ["./docker/celery.sh", "flower"]
+    volumes:
+      - .:/main_app
+    env_file:
+      - .env-non-dev
+    ports:
+      - "5555:5555"
+    depends_on:
+      - redis
+    entrypoint: [ ]

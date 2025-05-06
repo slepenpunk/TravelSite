@@ -1,4 +1,6 @@
-from sqlalchemy import select, delete, update
+from typing import List, Optional
+
+from sqlalchemy import delete, select, update
 
 from bookings.models import BookingModel
 from bookings.service import BookingService
@@ -12,18 +14,20 @@ class RoomService(BaseService):
     model = RoomModel
 
     @classmethod
-    async def find_by_price(cls, max_price: int, min_price: int):
+    async def find_by_price(cls, max_price: int, min_price: int) -> List[RoomModel]:
         async with async_session_maker() as session:
-            query = select(cls.model).where(cls.model.price.between(min_price, max_price))
+            query = select(cls.model).where(
+                cls.model.price.between(min_price, max_price)
+            )
             result = await session.execute(query)
             return result.scalars().all()
 
     @classmethod
-    async def drop_room_id_of_bookings(cls, room_id):
+    async def drop_room_id_of_bookings(cls, room_id: int) -> None:
         async with async_session_maker() as session:
             get_dropping_room = await BookingService.find_all(room_id=room_id)
             if get_dropping_room is None:
-                return RoomNotFound
+                raise RoomNotFound
             for room in get_dropping_room:
                 drop_room_id_of_booking = (
                     update(BookingModel)
@@ -34,7 +38,7 @@ class RoomService(BaseService):
             await session.commit()
 
     @classmethod
-    async def delete(cls, room_id):
+    async def delete(cls, room_id: int) -> RoomModel:
         async with async_session_maker() as session:
             get_room = await cls.find_one_or_none(id=room_id)
             if get_room is None:

@@ -1,10 +1,12 @@
 import datetime
 
-from fastapi import Request, Depends
-from jose import jwt, JWTError
+from fastapi import Depends, Request
+from jose import JWTError, jwt
+
 from config import SECRET_KEY
-from .exceptions import *
 from users.service import UserService
+
+from .exceptions import *
 
 
 def get_token(request: Request):

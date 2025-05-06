@@ -1,10 +1,10 @@
-from typing import Literal
+import os
 
 from dotenv import load_dotenv
-import os
 
 load_dotenv()
 MODE = os.environ.get("MODE")
+LOG_LEVEL = os.environ.get("LOG_LEVEL")
 
 DB_HOST = os.environ.get("DB_HOST")
 DB_PORT = os.environ.get("DB_PORT")

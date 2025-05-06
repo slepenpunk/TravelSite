@@ -1,12 +1,16 @@
+import logging
+
 from fastapi import APIRouter
 from fastapi_cache.decorator import cache
 
 from hotels.service import HotelService
+from logger import handle_and_log_errors
 from rooms.exceptions import RoomNotFound
-from rooms.schemas import RoomSchema, RoomResponse
+from rooms.schemas import RoomSchema
 from rooms.service import RoomService
 
 room_router = APIRouter(prefix="/rooms", tags=["Rooms"])
+logger = logging.getLogger(__name__)
 
 
 async def get_rooms_with_hotel_info(rooms) -> list[RoomSchema]:
@@ -20,7 +24,7 @@ async def get_rooms_with_hotel_info(rooms) -> list[RoomSchema]:
                 name=room.name,
                 price=room.price,
                 hotel_name=hotel.name,
-                hotel_city=hotel.city
+                hotel_city=hotel.city,
             )
         )
 
@@ -29,27 +33,26 @@ async def get_rooms_with_hotel_info(rooms) -> list[RoomSchema]:
 
 @room_router.get("", response_model=list[RoomSchema])
 @cache(expire=30)
+@handle_and_log_errors(logger=logger)
 async def get_all_rooms():
-    get_rooms = await RoomService.find_all()
-    if not get_rooms:
-        raise RoomNotFound
-
-    rooms = await get_rooms_with_hotel_info(get_rooms)
-    return rooms
+    try:
+        get_rooms = await RoomService.find_all()
+        if not get_rooms:
+            raise RoomNotFound
+        rooms = await get_rooms_with_hotel_info(get_rooms)
+        return rooms
+    except Exception as e:
+        logger.error(f"Error info: {e}", exc_info=True)
+        raise
 
 
 @room_router.get("/price", response_model=list[RoomSchema])
 @cache(expire=30)
+@handle_and_log_errors(logger=logger)
 async def get_rooms_by_price(max_price: int, min_price: int = 0):
     get_rooms = await RoomService.find_by_price(max_price, min_price)
     if not get_rooms:
         raise RoomNotFound
-
     rooms = await get_rooms_with_hotel_info(get_rooms)
     return rooms
 
-
-# @room_router.delete("/delete/{room_id}", response_model=RoomResponse)
-# async def delete(room_id: int):
-#     room = await RoomService.delete(room_id=room_id)
-#     return RoomResponse(message=f"{room.name} was deleted!")

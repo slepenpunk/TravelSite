@@ -5,19 +5,17 @@ import pytest
 from fakeredis import aioredis
 from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend
+from httpx import ASGITransport, AsyncClient
 from sqlalchemy import insert
 
-from database import Base, async_session_maker, engine
-from config import MODE
 from bookings.models import BookingModel
+from config import EMAIL_USER_FOR_TESTS, MODE, PASSWORD_USER_FOR_TESTS
+from database import Base, async_session_maker, engine
+from hotels.models import HotelModel
 from main import app
 from rooms.models import RoomModel
 from users.auth import get_password_hash
 from users.models import UserModel
-from hotels.models import HotelModel
-from httpx import AsyncClient, ASGITransport
-
-from config import EMAIL_USER_FOR_TESTS, PASSWORD_USER_FOR_TESTS
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -41,7 +39,9 @@ async def prepare_database():
         user["password"] = get_password_hash(user["password"])
 
     for booking in bookings:
-        booking["date_from"] = datetime.datetime.strptime(booking["date_from"], "%Y-%m-%d")
+        booking["date_from"] = datetime.datetime.strptime(
+            booking["date_from"], "%Y-%m-%d"
+        )
         booking["date_to"] = datetime.datetime.strptime(booking["date_to"], "%Y-%m-%d")
 
     async with async_session_maker() as session:
@@ -66,17 +66,21 @@ async def init_cache():
 
 @pytest.fixture(scope="function")
 async def ac():
-    async with AsyncClient(base_url="http://test", transport=ASGITransport(app=app)) as ac:
+    async with AsyncClient(
+        base_url="http://test", transport=ASGITransport(app=app)
+    ) as ac:
         yield ac
 
 
 @pytest.fixture(scope="session")
 async def auth_ac():
-    async with AsyncClient(base_url="http://test", transport=ASGITransport(app=app)) as ac:
-        response = await ac.post("/auth/login", json={
-            "email": EMAIL_USER_FOR_TESTS,
-            "password": PASSWORD_USER_FOR_TESTS
-        })
+    async with AsyncClient(
+        base_url="http://test", transport=ASGITransport(app=app)
+    ) as ac:
+        response = await ac.post(
+            "/v1/auth/login",
+            json={"email": EMAIL_USER_FOR_TESTS, "password": PASSWORD_USER_FOR_TESTS},
+        )
         cookie = response.cookies["booking_access_token"]
         assert cookie
         yield ac

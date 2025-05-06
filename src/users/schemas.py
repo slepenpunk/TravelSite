@@ -1,8 +1,8 @@
 import re
 
-from pydantic import BaseModel, EmailStr, ConfigDict, Field, ValidationError, field_validator, model_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-from users.exceptions import IncorrectEmailFormat, IncorrectUsernameFormat, IncorrectPasswordFormat
+from users.exceptions import *
 
 
 class UserSchema(BaseModel):
@@ -24,10 +24,7 @@ class UserSchema(BaseModel):
             raise IncorrectEmailFormat
         return value
 
-    model_config = ConfigDict(
-        from_attributes=True,
-        arbitrary_types_allowed=True
-    )
+    model_config = ConfigDict(from_attributes=True, arbitrary_types_allowed=True)
 
 
 class UserIn(UserSchema):

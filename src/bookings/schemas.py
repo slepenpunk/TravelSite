@@ -1,9 +1,8 @@
 import datetime
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, ConfigDict, field_validator
 
 from bookings.exceptions import InvalidBookingDate
-from rooms.exceptions import RoomNotFound
 
 
 class BookingSchema(BaseModel):
@@ -12,10 +11,7 @@ class BookingSchema(BaseModel):
     total_cost: int
     total_days: int
 
-    model_config = ConfigDict(
-        from_attributes=True,
-        arbitrary_types_allowed=True
-    )
+    model_config = ConfigDict(from_attributes=True, arbitrary_types_allowed=True)
 
 
 class BookingIn(BaseModel):

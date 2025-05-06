@@ -12,7 +12,7 @@ class HotelService(BaseService):
     model = HotelModel
 
     @classmethod
-    async def drop_hotel_id_of_rooms(cls, hotel_id):
+    async def drop_hotel_id_of_rooms(cls, hotel_id: int) -> None:
         async with async_session_maker() as session:
             dropping_rooms = await RoomService.find_all(hotel_id=hotel_id)
             if dropping_rooms:
@@ -26,7 +26,7 @@ class HotelService(BaseService):
                 await session.commit()
 
     @classmethod
-    async def delete(cls, hotel_id):
+    async def delete(cls, hotel_id: int):
         get_hotel = await cls.find_one_or_none(id=hotel_id)
         if get_hotel is None:
             raise HotelNotFound

@@ -14,4 +14,3 @@ async def load_picture(name: str, file: UploadFile):
     with open(open_path, "wb+") as picture:
         shutil.copyfileobj(file.file, picture)
     process_pic.delay(celery_path)
-

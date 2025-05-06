@@ -1,12 +1,11 @@
 import smtplib
+from pathlib import Path
 
+from PIL import Image
 from pydantic import EmailStr
 
-from tasks.celery import celery
-from PIL import Image
-from pathlib import Path
 from config import SMTP_EMAIL, SMTP_HOST, SMTP_PASS, SMTP_PORT
-
+from tasks.celery import celery
 from tasks.email_message import create_booking_confirmation
 
 

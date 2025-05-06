@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, JSON
+from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
 
 from database import Base
@@ -17,4 +17,3 @@ class HotelModel(Base):
 
     def __str__(self):
         return f"{self.name}"
-

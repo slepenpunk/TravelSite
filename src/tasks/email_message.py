@@ -1,12 +1,13 @@
 from email.message import EmailMessage
 
 from pydantic import EmailStr
+
 from config import SMTP_EMAIL
 
 
 def create_booking_confirmation(
-        booking: dict,
-        email_to: EmailStr,
+    booking: dict,
+    email_to: EmailStr,
 ):
     email = EmailMessage()
     email["Subject"] = "Booking confirmation"
@@ -14,9 +15,9 @@ def create_booking_confirmation(
     email["To"] = email_to
 
     email.set_content(
-        f"""
-            <h1>kitty</h1>
+        """
+            <h1>Booking confirmation</h1>
         """,
-        subtype="html"
+        subtype="html",
     )
     return email
