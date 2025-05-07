@@ -4,7 +4,7 @@ from fastapi.templating import Jinja2Templates
 from hotels.exceptions import CityNotFound
 from hotels.router import get_hotels, get_hotels_by_city
 
-page_router = APIRouter(prefix="/pages", tags=["Frontend"])
+page_router = APIRouter(prefix="/dev/pages", tags=["Frontend"])
 templates = Jinja2Templates(directory="src/")
 
 

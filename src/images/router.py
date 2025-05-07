@@ -4,7 +4,7 @@ from fastapi import APIRouter, UploadFile
 
 from tasks.tasks import process_pic
 
-image_router = APIRouter(prefix="/images", tags=["Upload images"])
+image_router = APIRouter(prefix="/dev/images", tags=["Upload images"])
 
 
 @image_router.post("/upload")

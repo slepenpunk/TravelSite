@@ -12,11 +12,12 @@ from fastapi_versioning import VersionedFastAPI
 # from hawk_python_sdk.modules.fastapi import HawkFastapi
 from redis import asyncio as aioredis
 from sqladmin import Admin
+from starlette.responses import JSONResponse
 
 from admin.auth import authentication_backend
 from admin.views import BookingAdmin, HotelAdmin, RoomAdmin, UserAdmin
 from bookings.router import booking_router
-from config import REDIS_URL
+from config import REDIS_URL, MODE
 from database import engine
 from hotels.router import hotel_router
 from images.router import image_router
@@ -71,6 +72,13 @@ async def log_middleware(request: Request, call_next):
         extra={"status_code": response.status_code}
     )
     return response
+
+
+# @app.middleware("http")
+# async def dispatch(request: Request, call_next):
+#     if MODE == "PROD" and request.url.path.startswith("/v1/dev"):
+#         return JSONResponse({"detail": "Dev routes are disabled in production"}, status_code=403)
+#     return await call_next(request)
 
 
 # except HTTPException as e:
