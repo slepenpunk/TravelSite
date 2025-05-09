@@ -19,7 +19,9 @@ from exceptions.base import BaseHHTPException
         (1, 3, "2025-05-02", "2025-05-04", False),
     ],
 )
-async def test_add_and_get_booking(user_id, room_id, date_from, date_to, expected_result):
+async def test_add_and_get_booking(
+    user_id, room_id, date_from, date_to, expected_result
+):
     try:
         if date_from and date_to:
             date_from = datetime.strptime(date_from, "%Y-%m-%d").date()

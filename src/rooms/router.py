@@ -2,7 +2,9 @@ import logging
 
 from fastapi import APIRouter
 from fastapi_cache.decorator import cache
+from sqlalchemy import text
 
+from database import async_session_maker
 from hotels.service import HotelService
 from logger import handle_and_log_errors
 from rooms.exceptions import RoomNotFound
@@ -31,6 +33,14 @@ async def get_rooms_with_hotel_info(rooms) -> list[RoomSchema]:
     return rooms_with_info
 
 
+@room_router.get("/check_db")
+async def check_db():
+    async with async_session_maker() as session:
+        result = await session.execute(text("SELECT current_database()"))
+        current_db = result.scalar()
+        return {"current_database": current_db}
+
+
 @room_router.get("", response_model=list[RoomSchema])
 @cache(expire=30)
 @handle_and_log_errors(logger=logger)
@@ -55,4 +65,3 @@ async def get_rooms_by_price(max_price: int, min_price: int = 0):
         raise RoomNotFound
     rooms = await get_rooms_with_hotel_info(get_rooms)
     return rooms
-

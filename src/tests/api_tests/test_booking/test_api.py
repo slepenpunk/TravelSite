@@ -22,7 +22,9 @@ async def test_get_bookings(auth_ac: AsyncClient):
     ],
 )
 @pytest.mark.asyncio
-async def test_create_booking(room_id, date_from, date_to, status_code, auth_ac: AsyncClient):
+async def test_create_booking(
+    room_id, date_from, date_to, status_code, auth_ac: AsyncClient
+):
     get_me = await auth_ac.get("/v1/users/me")
     user_id = get_me.json()["id"]
     response = await auth_ac.post(
@@ -40,10 +42,10 @@ async def test_create_booking(room_id, date_from, date_to, status_code, auth_ac:
         bookings_json = bookings.json()
         for booking in bookings_json:
             if (
-                    booking["user_id"] == user_id
-                    and booking["room_id"] == room_id
-                    and booking["date_from"] == date_from
-                    and booking["date_to"] == date_to
+                booking["user_id"] == user_id
+                and booking["room_id"] == room_id
+                and booking["date_from"] == date_from
+                and booking["date_to"] == date_to
             ):
                 assert booking["user_id"] == user_id
                 assert booking["room_id"] == room_id
@@ -79,7 +81,7 @@ async def test_create_booking(room_id, date_from, date_to, status_code, auth_ac:
 )
 @pytest.mark.asyncio
 async def test_update_booking(
-        booking_id, room_id, date_from, date_to, status_code, auth_ac: AsyncClient
+    booking_id, room_id, date_from, date_to, status_code, auth_ac: AsyncClient
 ):
     get_me = await auth_ac.get("/v1/users/me")
     user_id = get_me.json()["id"]
@@ -91,7 +93,9 @@ async def test_update_booking(
         "date_to": date_to,
     }
 
-    response = await auth_ac.patch(f"/v1/bookings/update/{booking_id}", json=updating_booking)
+    response = await auth_ac.patch(
+        f"/v1/bookings/update/{booking_id}", json=updating_booking
+    )
     assert response.status_code == status_code
     if response.status_code == 200:
         get_bookings = await auth_ac.get("/v1/bookings")

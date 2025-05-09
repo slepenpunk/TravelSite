@@ -1,5 +1,3 @@
-from typing import Optional
-
 from sqlalchemy import delete, insert, select, update
 
 from database import async_session_maker

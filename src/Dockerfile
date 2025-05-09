@@ -16,6 +16,3 @@ COPY --chmod=+x ./docker/app.sh ./docker/app.sh
 ENTRYPOINT ["./docker/app.sh"]
 
 COPY . .
-
-# RUN chmod +x ./docker/celery.sh
-# CMD ["./docker/celery.sh"]

@@ -1,5 +1,3 @@
-from typing import Optional
-
 from sqlalchemy import Column, Computed, Date, ForeignKey, Integer
 from sqlalchemy.orm import relationship
 

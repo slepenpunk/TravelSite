@@ -30,7 +30,9 @@ async def get_bookings(user: UserModel = Depends(get_current_user)):
 
 @booking_router.post("/create", response_model=BookingResponse)
 @handle_and_log_errors(logger=logger)
-async def create_booking(booking: BookingIn, user: UserModel = Depends(get_current_user)):
+async def create_booking(
+    booking: BookingIn, user: UserModel = Depends(get_current_user)
+):
     new_booking = await BookingService.add(
         user.id, booking.room_id, booking.date_from, booking.date_to
     )
@@ -61,7 +63,7 @@ async def delete_booking(booking_id: int, user: UserModel = Depends(get_current_
 @booking_router.patch("/update/{booking_id}")
 @handle_and_log_errors(logger=logger)
 async def update_booking(
-        booking_id: int, booking: BookingIn, user: UserModel = Depends(get_current_user)
+    booking_id: int, booking: BookingIn, user: UserModel = Depends(get_current_user)
 ):
     updating_booking = await BookingService.update(
         item_id=booking_id,

@@ -36,7 +36,7 @@ class UserAdmin(ModelView, model=UserModel):
     can_delete = True
 
     async def on_model_change(
-            self, data: dict, model: Any, is_created: bool, request: Request
+        self, data: dict, model: Any, is_created: bool, request: Request
     ) -> None:
         try:
             new_email = data.get("email")
@@ -48,7 +48,9 @@ class UserAdmin(ModelView, model=UserModel):
             )
 
             if user_schema.email:
-                existing_user = await UserService.find_one_or_none(email=user_schema.email)
+                existing_user = await UserService.find_one_or_none(
+                    email=user_schema.email
+                )
                 if existing_user and (is_created or existing_user.id != model.id):
                     raise UserAlreadyExist
 
@@ -74,7 +76,7 @@ class BookingAdmin(ModelView, model=BookingModel):
     form_columns = ["user", "room", "date_from", "date_to"]
 
     async def on_model_change(
-            self, data: dict, model: Any, is_created: bool, request: Request
+        self, data: dict, model: Any, is_created: bool, request: Request
     ) -> None:
 
         room_id = data.get("room")

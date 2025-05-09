@@ -9,9 +9,9 @@ celery = Celery(
     broker_connection_retry_on_startup=True,
 )
 
-# In your Celery config file (usually celery.py or app.py)
+
 celery.conf.update(
-    accept_content=['json'],  # Only accept JSON serialization
-    task_serializer='json',
-    result_serializer='json',
+    accept_content=["json"],
+    task_serializer="json",
+    result_serializer="json",
 )

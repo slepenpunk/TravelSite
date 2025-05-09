@@ -20,7 +20,9 @@ if MODE == "TEST":
     DATABASE_URL = f"postgresql+asyncpg://{TEST_DB_USER}:{TEST_DB_PASS}@{TEST_DB_HOST}:{TEST_DB_PORT}/{TEST_DB_NAME}"
     DATABASE_PARAMS = {"poolclass": NullPool}
 else:
-    DATABASE_URL = f"postgresql+asyncpg://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+    DATABASE_URL = (
+        f"postgresql+asyncpg://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+    )
     DATABASE_PARAMS = {}
 
 engine = create_async_engine(DATABASE_URL, **DATABASE_PARAMS)

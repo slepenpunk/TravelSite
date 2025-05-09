@@ -1,4 +1,3 @@
-import logging
 from datetime import date, datetime, timezone
 from typing import Optional
 
@@ -63,11 +62,7 @@ class BookingService(BaseService):
 
     @classmethod
     async def add(
-            cls,
-            user_id: int,
-            room_id: int,
-            date_from: date,
-            date_to: date
+            cls, user_id: int, room_id: int, date_from: date, date_to: date
     ) -> Optional[BookingModel]:
 
         from rooms.service import RoomService

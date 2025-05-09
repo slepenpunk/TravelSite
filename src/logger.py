@@ -32,16 +32,16 @@ def handle_and_log_errors(logger: base_logger):
 class CustomJsonFormatter(JsonFormatter):
     def add_fields(self, log_record, record, message_dict):
         super().add_fields(log_record, record, message_dict)
-        if not log_record.get('timestamp'):
-            now = datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S')
-            log_record['timestamp'] = now
-        if log_record.get('level'):
-            log_record['level'] = log_record['level'].upper()
+        if not log_record.get("timestamp"):
+            now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
+            log_record["timestamp"] = now
+        if log_record.get("level"):
+            log_record["level"] = log_record["level"].upper()
         else:
-            log_record['level'] = record.levelname
+            log_record["level"] = record.levelname
 
 
-formatter = CustomJsonFormatter('%(timestamp)s %(level)s %(name)s %(message)s')
+formatter = CustomJsonFormatter("%(timestamp)s %(level)s %(name)s %(message)s")
 logHandler.setFormatter(formatter)
 base_logger.addHandler(logHandler)
 base_logger.setLevel(level=LOG_LEVEL)

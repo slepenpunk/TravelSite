@@ -35,7 +35,9 @@ async def test_register_user(username, email, password, status_code, ac: AsyncCl
 )
 @pytest.mark.asyncio
 async def test_login_user(email, password, status_code, ac: AsyncClient):
-    response = await ac.post("/v1/auth/login", json={"email": email, "password": password})
+    response = await ac.post(
+        "/v1/auth/login", json={"email": email, "password": password}
+    )
     assert response.status_code == status_code
 
 

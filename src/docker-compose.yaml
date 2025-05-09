@@ -5,7 +5,7 @@ services:
     ports:
       - "8080:8000"
     environment:
-      MODE: "DEV"
+      MODE: "TEST"
     env_file:
       - .env-non-dev
     depends_on:
@@ -37,11 +37,11 @@ services:
     container_name: test_app_db
     image: postgres
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U test" ]
+      test: [ "CMD-SHELL", "pg_isready -d testdb -U test" ]
       interval: 5s
       timeout: 5s
     environment:
-      POSTGRES_DB: test
+      POSTGRES_DB: testdb
       POSTGRES_USER: test
       POSTGRES_PASSWORD: test
     env_file:
